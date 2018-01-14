@@ -36,6 +36,7 @@ isdiff='1'
 hostlist=("@")
 domain=$DOMAIN
 password=$PASSWORD
+seconds=$SECONDS
 
 while true; do
     echo Running...
@@ -43,5 +44,6 @@ while true; do
     if [ $isdiff -eq 0 ]; then
         update $hostlist $domain $password
     fi
-    sleep 30
+    sleep $seconds
 done
+
