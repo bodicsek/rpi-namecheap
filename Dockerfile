@@ -1,4 +1,4 @@
-FROM bodicsek/rpi-alpine:edge
+FROM bodicsek/alpine-armhf:edge
 
 LABEL Description="Namecheap dynamic dns client"
 
