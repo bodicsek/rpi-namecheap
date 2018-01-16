@@ -2,17 +2,18 @@
 
 function ipcheck {
     isdiff=1
+    domain=$1
     hostlist=$2
     ipaddressnew=`dig +short myip.opendns.com @resolver1.opendns.com`
     echo Current ip address: $ipaddressnew
     for host in ${hostlist[@]}
     do
         if [ $host == "@" ]; then
-            ipaddresscurrent=`nslookup $1 | grep Address | grep -v "#" | cut -f2 -d" "`
+            ipaddresscurrent=`nslookup $domain | grep Address | grep -v "#" | cut -f2 -d" "`
         else
-            ipaddresscurrent=`nslookup $host.$1 | grep Address | grep -v "#" | cut -f2 -d" "`
+            ipaddresscurrent=`nslookup $host.$domain | grep Address | grep -v "#" | cut -f2 -d" "`
         fi
-        echo Registered ip address: $ipaddresscurrent
+        echo Registered ip address for $host.$domain : $ipaddresscurrent
         diffcheck=`echo $ipaddresscurrent | grep -c $ipaddressnew`
         if [ $diffcheck -eq 0 ];then
             isdiff=0
@@ -21,11 +22,11 @@ function ipcheck {
 }
 
 function update {
-    echo Updating host: $2
     hostlist=$1
+    domain=$2
     for host in ${hostlist[@]}
     do
-        echo $host
+        echo Updating $host.$domain :
         response=`curl https://dynamicdns.park-your-domain.com/update?host=$host\&domain=$2\&password=$3`
         echo $response
     done
@@ -33,7 +34,7 @@ function update {
 
 isdiff='1'
 
-hostlist=("@")
+IFS='|' read -r -a hostlist <<< "$HOSTLIST"
 domain=$DOMAIN
 password=$PASSWORD
 seconds=$SECONDS
